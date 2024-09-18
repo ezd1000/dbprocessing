@@ -2,6 +2,8 @@
 
 import argparse
 
+import sqlalchemy.sql
+
 from dbprocessing import DButils
 
 class scrubber(object):
