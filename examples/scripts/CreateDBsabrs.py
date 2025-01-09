@@ -38,7 +38,7 @@ class dbprocessing_db(object):
         url = url.format(user, password, host, port, db)
         self.engine = create_engine(url, echo=False, encoding='utf-8')
         self.metadata = sqlalchemy.MetaData()
-        self.metadata.reflect()
+        self.metadata.reflect(bind=self.engine)
 
     def createDB(self):
         """
