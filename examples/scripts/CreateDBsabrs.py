@@ -318,7 +318,7 @@ class dbprocessing_db(object):
         # engine = create_engine('postgres:///' + self.filename, echo=False)
         # metadata.bind = engine
 
-        metadata.create_all(checkfirst=True, bind=engine)
+        metadata.create_all(checkfirst=True, bind=self.engine)
     def addMission(self, filename):
         """utility to add a mission"""
         self.dbu = DButils.DButils(filename)
