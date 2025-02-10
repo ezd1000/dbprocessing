@@ -5,7 +5,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import datetime
-import importlib.util 
+import imp 
 import os
 import shutil
 import sys
@@ -259,9 +259,7 @@ class ProcessQueue(object):
         claimed = []
         for code, desc, arg, product in act_insp:
             try:
-                specification = importlib.util.spec_from_file_location("inspect", code) # Makes specification from the file path
-                inspect = importlib.util.module_from_spec(specification) # Creates module
-                specification.loader.exec_module(inspect) # Loads module
+                inspect = imp.load_source('inspect', code)
             except IOError as msg:
                 DBlogging.dblogger.error('Inspector: "{0}" not found: {1}'.format(code, msg))
                 if os.path.isfile(code + ' '):
