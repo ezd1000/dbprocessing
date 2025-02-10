@@ -5,7 +5,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import datetime
-import imp
 import os
 import shutil
 import sys
@@ -259,7 +258,16 @@ class ProcessQueue(object):
         claimed = []
         for code, desc, arg, product in act_insp:
             try:
-                inspect = imp.load_source('inspect', code)
+                if sys.version_info < (3,4):
+                    import imp # imp is deprecated at python 3.4
+                    inspect = imp.load_source('inspect', code)
+                else:
+                    import importlib.util  # used in python 3.4 and above
+                    import importlib.machinery
+                    loader = importlib.machinery.SourceFileLoader('inspect', code)
+                    spec = importlib.util.spec_from_file_location('inspect', code, loader=loader)
+                    inspect = importlib.util.module_from_spec(spec)
+                    loader.exec_module(inspect)
             except IOError as msg:
                 DBlogging.dblogger.error('Inspector: "{0}" not found: {1}'.format(code, msg))
                 if os.path.isfile(code + ' '):

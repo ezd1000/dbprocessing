@@ -4,7 +4,7 @@ from __future__ import print_function
 import datetime
 import unittest
 import tempfile
-import imp
+import sys
 import warnings
 import os
 
@@ -59,9 +59,17 @@ class InspectorClass(unittest.TestCase, dbp_testing.AddtoDBMixin):
         self.makeTestDB()
         self.loadData(os.path.join(dbp_testing.testsdir, 'data', 'db_dumps',
                                    'testDB_dump.json'))
-        self.inspect = imp.load_source('inspect', os.path.join(
-            dbp_testing.testsdir, 'inspector', 'rot13_L1.py'))
-
+        if sys.version_info < (3, 4):
+            import imp
+            self.inspect = imp.load_source('inspect', os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1.py'))
+        else:
+            import importlib.util
+            import importlib.machinery
+            loader = importlib.machinery.SourceFileLoader('inspect', os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1.py'))
+            spec = importlib.util.spec_from_file_location('inspect', os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1.py'), loader=loader)
+            self.inspect = importlib.util.module_from_spec(spec)
+            loader.exec_module(self.inspect)
+            
     def tearDown(self):
         super(InspectorClass, self).tearDown()
         self.removeTestDB()
@@ -80,10 +88,18 @@ class InspectorClass(unittest.TestCase, dbp_testing.AddtoDBMixin):
         self.assertEqual(repr(Diskfile.Diskfile(goodfile, self.dbu)), repr(self.inspect.Inspector(goodfile, self.dbu, 1,)()))
         #self.assertEqual(None, self.inspect.Inspector(goodfile, self.dbu, 1,).extract_YYYYMMDD())
         # This inspector sets the data_level - not allowed
-        inspect = imp.load_source('inspect', os.path.join(
-            dbp_testing.testsdir, 'inspector', 'rot13_L1_dlevel.py'))
-        with warnings.catch_warnings(record=True) as w:
-            self.assertEqual(repr(Diskfile.Diskfile(goodfile, self.dbu)), repr(self.inspect.Inspector(goodfile, self.dbu, 1,)()))
+        if sys.version_info < (3, 4):
+            import imp # Depracated in Python 3.4
+            inspect = imp.load_source('inspect', os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1_dlevel.py'))
+        else:
+            import importlib.util
+            import importlib.machinery
+            loader = importlib.machinery.SourceFileLoader('inspect', os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1_dlevel.py'))
+            spec = importlib.util.spec_from_file_location('inspect', os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1_dlevel.py'), loader=loader)
+            inspect = importlib.util.module_from_spec(spec)
+            loader.exec_module(inspect)
+        with warnings.catch_warnings(record=True) as w: 
+            self.assertEqual(repr(Diskfile.Diskfile(goodfile, self.dbu)), repr(inspect.Inspector(goodfile, self.dbu, 1,)()))
         self.assertEqual(len(w), 1)
         self.assertTrue(isinstance(w[0].message, UserWarning))
         self.assertEqual('Inspector rot13_L1_dlevel.py:  set level to 2.0, '
@@ -93,8 +109,17 @@ class InspectorClass(unittest.TestCase, dbp_testing.AddtoDBMixin):
         # The file doesn't match the inspector pattern...
         badfile =  os.path.join(
             dbp_testing.testsdir, 'inspector', 'testDB_01_first.raw')
-        inspect = imp.load_source('inspect', os.path.join(
-            dbp_testing.testsdir, 'inspector', 'rot13_L1.py'))
+        if sys.version_info < (3, 4):
+            import imp # Depracated in Python 3.4
+            inspect = imp.load_source('inspect', os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1.py'))
+        else:
+            import importlib.util
+            import importlib.machinery
+            loader = importlib.machinery.SourceFileLoader('inspect', os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1.py'))
+            spec = importlib.util.spec_from_file_location('inspect', os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1.py'), loader=loader)
+            inspect = importlib.util.module_from_spec(spec)
+            loader.exec_module(inspect)
+            
         self.assertEqual(None, inspect.Inspector(badfile, self.dbu, 1,)())
 
     def test_inspector_regex(self):
