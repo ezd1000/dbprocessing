@@ -304,7 +304,14 @@ class UtilsTests(unittest.TestCase, dbp_testing.AddtoDBMixin):
         self.assertEqual(
             datetime.datetime(2010, 1, 1, 23, 59, 59, 999999),
             Utils.toDatetime(datetime.date(2010, 1, 1), end=True))
-
-
+    def test_load_source(self):
+        """Testing load_source in Utils.py"""
+        filename = "temp_testfile.py"
+        with open(filename, "w") as f:
+            f.write("def hello():\n    return 'Hello, world!'\n")
+        inspect = None
+        module = Utils.load_source("temp_testfile", filename, inspect)
+        self.assertEqual(module.hello(), 'Hello, world!')
+        
 if __name__ == "__main__":
     unittest.main()
