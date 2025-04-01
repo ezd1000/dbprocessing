@@ -560,3 +560,18 @@ def readconfig(config_filepath):
                 else:
                     ans[section][item] = (ans[section][item], 0, 0)
     return ans
+def load_source(modname, filepath, module):
+    """
+    The imp module was removed in Python 3.4, thus, adaptations were made so the imp.load_source feature can be used for later Python versions
+    """
+    try:
+        import importlib.util
+        import importlib.machinery
+        loader = importlib.machinery.SourceFileLoader(modname, filepath)
+        spec = importlib.util.spec_from_file_location(modname, filepath, loader=loader)
+        module = importlib.util.module_from_spec(spec)
+        loader.exec_module(module)
+    except ImportError:
+        import imp # Depracated in Python 3.4
+        module = imp.load_source(modname, filepath)
+    return module
