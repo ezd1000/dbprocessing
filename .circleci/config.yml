@@ -4,11 +4,11 @@ version: 2.1
 jobs:
   deps:
     docker:
-      - image: circleci/python:2.7
+      - image: cimg/python:2.7
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
-      - image: circleci/python:3.7
+      - image: cimg/python:3.7
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
@@ -28,7 +28,7 @@ jobs:
              - lib # Save installed Python libraries
   unittest:
     docker:
-      - image: circleci/python:2.7
+      - image: cimg/python:2.7
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
@@ -42,7 +42,7 @@ jobs:
              python unit_tests/test_all.py -v
   unittest3:
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/python:3.7
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
@@ -56,13 +56,13 @@ jobs:
              python3 unit_tests/test_all.py -v
   testpostgres:
     docker:
-      - image: circleci/python:2.7
+      - image: cimg/python:2.7
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
         environment:
           DATABASE_URL: postgresql://root@localhost/circle_test?sslmode=disable
-      - image: circleci/postgres:9.6.5-alpine-ram
+      - image: cimg/postgres:9.6.5-alpine-ram
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
@@ -86,13 +86,13 @@ jobs:
              python unit_tests/test_all.py -v
   testpostgres3:
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/python:3.7
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
         environment:
           DATABASE_URL: postgresql://root@localhost/circle_test?sslmode=disable
-      - image: circleci/postgres:9.6.5-alpine-ram
+      - image: cimg/postgres:9.6.5-alpine-ram
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
@@ -116,7 +116,7 @@ jobs:
              python3 unit_tests/test_all.py -v
   docs:
     docker:
-      - image: circleci/python:2.7
+      - image: cimg/python:2.7
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
