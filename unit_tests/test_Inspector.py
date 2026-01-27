@@ -61,8 +61,8 @@ class InspectorClass(unittest.TestCase, dbp_testing.AddtoDBMixin):
         self.loadData(os.path.join(dbp_testing.testsdir, 'data', 'db_dumps',
                                    'testDB_dump.json'))
         filename = os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1.py')
-        self.inspect = None
-        self.inspect = Utils.load_source('inspect', filename, self.inspect)
+        self.inspect = Utils.load_source('inspect', filename)
+
     def tearDown(self):
         super(InspectorClass, self).tearDown()
         self.removeTestDB()
@@ -82,8 +82,7 @@ class InspectorClass(unittest.TestCase, dbp_testing.AddtoDBMixin):
         #self.assertEqual(None, self.inspect.Inspector(goodfile, self.dbu, 1,).extract_YYYYMMDD())
         # This inspector sets the data_level - not allowed
         filename = os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1_dlevel.py')
-        inspect = None
-        inspect = Utils.load_source('inspect', filename, inspect)
+        inspect = Utils.load_source('inspect', filename)
         with warnings.catch_warnings(record=True) as w: 
             self.assertEqual(repr(Diskfile.Diskfile(goodfile, self.dbu)), repr(inspect.Inspector(goodfile, self.dbu, 1,)()))
         self.assertEqual(len(w), 1)
@@ -96,8 +95,7 @@ class InspectorClass(unittest.TestCase, dbp_testing.AddtoDBMixin):
         badfile =  os.path.join(
             dbp_testing.testsdir, 'inspector', 'testDB_01_first.raw')
         filename = os.path.join(dbp_testing.testsdir, 'inspector', 'rot13_L1.py')
-        inspect = None
-        inspect = Utils.load_source('inspect', filename, inspect)    
+        inspect = Utils.load_source('inspect', filename)
         self.assertEqual(None, inspect.Inspector(badfile, self.dbu, 1,)())
 
     def test_inspector_regex(self):

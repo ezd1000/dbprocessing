@@ -88,6 +88,8 @@ class DBRunnerTests(unittest.TestCase):
                 sys.stderr = oldstderr
             running_script = os.path.basename(sys.argv[0])
             self.assertTrue(err.startswith("{}: error: argument".format(running_script)))
+
+
 class DBRunnerCalcRunmeTests(unittest.TestCase, dbp_testing.AddtoDBMixin):
     """DBRunner tests of calc_runme"""
 

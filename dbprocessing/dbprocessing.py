@@ -258,9 +258,7 @@ class ProcessQueue(object):
         claimed = []
         for code, desc, arg, product in act_insp:
             try:
-                fname = code
-                inspect = None
-                inspect = Utils.load_source('inspect',fname, inspect)
+                inspect = Utils.load_source('inspect', code)
             except IOError as msg:
                 DBlogging.dblogger.error('Inspector: "{0}" not found: {1}'.format(code, msg))
                 if os.path.isfile(code + ' '):

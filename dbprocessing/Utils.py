@@ -560,9 +560,26 @@ def readconfig(config_filepath):
                 else:
                     ans[section][item] = (ans[section][item], 0, 0)
     return ans
-def load_source(modname, filepath, module):
+
+
+def load_source(modname, filepath):
     """
-    The imp module was removed in Python 3.4, thus, adaptations were made so the imp.load_source feature can be used for later Python versions
+    Load a module from a source file, in the style of the imp module from
+    Python before 3.4.
+
+    Parameters
+    ----------
+    modname : :class:`str`
+        name for the module to have after importing
+
+    filepath : :class:`str`
+        full path to source code for the module to be parsed
+
+    Returns
+    -------
+    :ref:`module <module-objects>`
+        The loaded module
+
     """
     try:
         import importlib.util
@@ -572,6 +589,6 @@ def load_source(modname, filepath, module):
         module = importlib.util.module_from_spec(spec)
         loader.exec_module(module)
     except ImportError:
-        import imp # Depracated in Python 3.4
+        import imp # Deprecated in Python 3.4
         module = imp.load_source(modname, filepath)
     return module
